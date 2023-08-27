@@ -17,43 +17,28 @@ const SearchButton = ({ otherClasses }: { otherClasses: string }) => (
   </button>
 );
 
-const SearchBar = () => {
-  const [manufacturer, setManufacturer] = useState('');
-  const [model, setmodel] = useState('');
+const SearchBar = ( {setManufacturer, setModel}) => {
+  const [searchManufacturer, setSearchManufacturer] = useState('');
+  const [searchModel, setSearchModel] = useState('');
   const router = useRouter();
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (manufacturer.trim() === "" && model.trim() === "") {
+    if (searchManufacturer.trim() === "" && searchModel.trim() === "") {
       return alert("Please provide some input");
     }
-
-    updateSearchParams(model.toLowerCase(), manufacturer.toLowerCase());
+      setModel(searchModel),
+      setManufacturer(searchManufacturer);
   };
-  const updateSearchParams = (model: string, manufacturer: string) => {
-    const searchParams = new URLSearchParams(window.location.search);
-    if (model) {
-      searchParams.set("model", model);
-    } else {
-      searchParams.delete("model");
-    }
-    if (manufacturer) {
-      searchParams.set("manufacturer", manufacturer);
-    } else {
-      searchParams.delete("manufacturer");
-    }
-
-    const newPathname = `${window.location.pathname}?${searchParams.toString()}`;
-    router.push(newPathname);
-  };
+  
 
   return (
     <form className="searchbar" onSubmit={handleSearch}>
       <div className="searchbar__item">
         <SearchManufacturer
-          manufacturer={manufacturer}
-          setManufacturer={setManufacturer}
+          selected={searchManufacturer}
+          setSelected={setSearchManufacturer}
         />
         <SearchButton otherClasses="sm:hidden" />
       </div>
@@ -68,8 +53,8 @@ const SearchBar = () => {
         <input
           type="text"
           name="model"
-          value={model}
-          onChange={(e) => setmodel(e.target.value)}
+          value={searchModel}
+          onChange={(e) => setSearchModel(e.target.value)}
           placeholder="Tiguan"
           className="searchbar__input"
         />
